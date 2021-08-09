@@ -33,5 +33,4 @@ public class InstructionTable {
     public static Instruction getInstruction(String key) {
         return map.get(key);
     }
-
 }

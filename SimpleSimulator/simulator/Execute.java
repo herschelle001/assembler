@@ -66,6 +66,7 @@ public class Execute {
         System.out.println(res);
     }
 
+    // Utility Functions
 
     private static String getOpcode(String binary) {
         return binary.substring(0, 5);
@@ -83,41 +84,21 @@ public class Execute {
         return InstructionTable.getInstruction(opcode).getName();
     }
 
-
-
-
-
     private static Register pointToRegister(int value) {
-        if(value == 0) {
-            return R0;
-        }
-        if(value == 1) {
-            return R1;
-        }
-        if(value == 2) {
-            return R2;
-        }
-        if(value == 3) {
-            return R3;
-        }
-        if(value == 4) {
-            return R4;
-        }
-        if(value == 5) {
-            return R5;
-        }
-        if(value == 6) {
-            return R6;
-        }
+        if(value == 0) return R0;
+        if(value == 1) return R1;
+        if(value == 2) return R2;
+        if(value == 3) return R3;
+        if(value == 4) return R4;
+        if(value == 5) return R5;
+        if(value == 6) return R6;
         Register r = new Register();
         int data = binaryToInteger(FLAGS.getDataBinary());
         r.setData(data);
         return r;
     }
 
-
-
-
+    // Handle types of instructions
 
     private static int typeA(String binary) {
         String opcode = getOpcode(binary);
