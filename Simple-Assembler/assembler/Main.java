@@ -2,85 +2,117 @@ package assembler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class Main {
 
-    private static ArrayList<ArrayList<String>> input;
-
-    public static void init(ArrayList<ArrayList<String>> array) {
-        input = new ArrayList<>(array);
-    }
-
     public static void main(String[] args) {
         InstructionTable.populate();
+        ArrayList<String> rawInput = new ArrayList<>();
+        ArrayList<ArrayList<String>> input = new ArrayList<>();
+        Scanner scanner = new Scanner(System.in);
+        int lineNumber = 0;
+        int currLine = 1;
+        int numberOfVariables = 0;
+        try {
+            while (true) {
+                String line = scanner.nextLine();
+                if(Objects.equals(line, "")) {
+                    continue;
+                }
+                rawInput.add(line);
+                String[] splitLine = line.split(" ");
+                ArrayList<String> tokens = new ArrayList<>(Arrays.asList(splitLine));
+                input.add(lineNumber++, tokens);
+                if (splitLine[splitLine.length - 1].equals("hlt")) {
+                    break;
+                }
+                if (!scanner.hasNextLine()) {
+                    throw new Exception("No hlt statement at the end");
+                }
+                currLine++;
+            }
+            if (scanner.hasNextLine()) {
+                throw new Exception("hlt should be at the end of the code");
+            }
 
-        boolean isSyntaxCorrect = ErrorGen.init();
+            Error.init(input);
 
-        if(!isSyntaxCorrect) {
-            return;
-        }
-
-        // First Pass
-        // Changing second type of mov to mvr
-        for (ArrayList<String> line : input) {
-            String first = line.get(0);
-            if(isLabel(first)) {
-                String second = line.get(1);
-                if(second.equals("mov")) {
-                    String fourth = line.get(3);
-                    if(Decipher.isRegister(fourth)) {
-                        line.set(1, "mvr");
+            currLine = 1;
+            try {
+                for (ArrayList<String> line : input) {
+                    String first = line.get(0);
+                    if (isLabel(first)) {
+                        String second = line.get(1);
+                        if (second.equals("mov")) {
+                            String fourth = line.get(3);
+                            if (UtilityFunctions.isRegister(fourth)) {
+                                line.set(1, "mvr");
+                            }
+                        }
                     }
+                    else if (first.equals("mov")) {
+                        String third = line.get(2);
+                        if (UtilityFunctions.isRegister(third)) {
+                            line.set(0, "mvr");
+                        }
+                    }
+                    currLine++;
                 }
+            } catch (Exception e) {
+                throw new Exception("Wrong syntax");
             }
-            else if(first.equals("mov")) {
-                String third = line.get(2);
-                if(Decipher.isRegister(third)) {
-                    line.set(0, "mvr");
+
+
+            currLine = 1;
+            int size = 0;
+            for (ArrayList<String> line : input) {
+                String first = line.get(0);
+                boolean variable = first.equals("var");
+                if (variable) {
+                    String second = line.get(1);
+                    VariableTable.addVariable(second, "");
+                    numberOfVariables++;
                 }
+                else if (isLabel(first)) {
+                    LabelTable.addLabel(first, String.valueOf(size++));
+                }
+                else {
+                    size++;
+                }
+                currLine++;
             }
-        }
+            VariableTable.updateAddresses(size);
 
-        // Second Pass
-        // Populating Label and Variable Tables
-        int size = 0;
-        for (ArrayList<String> line : input) {
-            String first = line.get(0);
-            boolean variable = first.equals("var");
-            if (variable) {
-                String second = line.get(1);
-                VariableTable.addVariable(second, "");
+            currLine = 1;
+            int codeStart = VariableTable.getSize();
+            for (int i = codeStart; i < input.size(); i++) {
+                ArrayList<String> line = input.get(i);
+                String first = line.get(0);
+                if (isLabel(first)) {
+                    ArrayList<String> temp = new ArrayList<>(line);
+                    temp.remove(0);
+                    Encode.generate(temp);
+                } else {
+                    Encode.generate(line);
+                }
+                currLine++;
             }
-            else if(isLabel(first)) {
-                LabelTable.addLabel(first, String.valueOf(size++));
-            }
-            else {
-                size++;
-            }
-        }
-        VariableTable.updateAddresses(size);
 
-        // Third Pass
-        // Iterating on code to generate its binary
-        int codeStart = VariableTable.getSize();
-        for (int i = codeStart; i < input.size(); i++) {
-            ArrayList<String> line = input.get(i);
-            String first = line.get(0);
-            if(isLabel(first)) {
-                ArrayList<String> temp = new ArrayList<>(line);
-                temp.remove(0);
-                Encode.generate(temp);
-            }
-            else {
-                Encode.generate(line);
-            }
+            Encode.printBinary();
         }
-
-        Encode.printBinary();
+        catch (IllegalStateException e) {
+            System.out.println(e.getMessage());
+        }
+        catch (Exception e) {
+            int line = currLine + numberOfVariables;
+            System.out.println("Error at line " + line + " - '" + rawInput.get(line - 1) + "'");
+            System.out.println(e.getMessage());
+        }
     }
 
-    private static boolean isLabel(String token) {
-        return Decipher.isLabel(token);
+    static boolean isLabel(String token) {
+        return UtilityFunctions.isLabel(token);
     }
 }

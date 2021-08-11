@@ -31,6 +31,13 @@ public class InstructionTable {
     }
 
     public static Instruction getInstruction(String key) {
+        if(!isPresent(key)) {
+            throw new NullPointerException("Typo in instruction name - '" + key + "'");
+        }
         return map.get(key);
+    }
+
+    private static boolean isPresent(String key) {
+        return map.containsKey(key);
     }
 }

@@ -12,9 +12,10 @@ public class VariableTable {
     }
 
     public static String getAddress(String variable) {
-        if (isPresent(variable))
-            return map.get(variable);
-        return null;
+        if (!isPresent(variable))  {
+            throw new NullPointerException("Typo in variable name or variable not declared - '" + variable + "'");
+        }
+        return map.get(variable);
     }
 
     public static void updateAddresses(int address) {

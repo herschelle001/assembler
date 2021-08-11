@@ -13,9 +13,10 @@ public class LabelTable {
     }
 
     public static String getAddress(String label) {
-        if(isPresent(label))
-            return map.get(label);
-        return null;
+        if(!isPresent(label)) {
+            throw new NullPointerException("Typo in label name or label not declared - '" + label + "'");
+        }
+        return map.get(label);
     }
 
     public static boolean isPresent(String label) {
