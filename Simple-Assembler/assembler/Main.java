@@ -29,12 +29,12 @@ public class Main {
                     break;
                 }
                 if (!scanner.hasNextLine()) {
-                    throw new Exception("No hlt statement at the end");
+                    throw new IllegalStateException("No hlt statement at the end");
                 }
                 currLine++;
             }
             if (scanner.hasNextLine()) {
-                throw new Exception("hlt should be at the end of the code");
+                throw new IllegalStateException("hlt should be at the end of the code");
             }
 
             Error.init(input);
