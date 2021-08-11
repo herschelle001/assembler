@@ -35,7 +35,7 @@ public class Encode {
                 typeF();
             }
         } catch (Exception e) {
-            throw new Exception("Wrong use of " + first + " instruction");
+            throw new Exception("Wrong syntax of " + first + " instruction");
         }
     }
 

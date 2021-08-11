@@ -21,8 +21,9 @@ public class Main {
                 if(Objects.equals(line, "")) {
                     continue;
                 }
+                line = line.strip();
                 rawInput.add(line);
-                String[] splitLine = line.split(" ");
+                String[] splitLine = line.split("\\s+");
                 ArrayList<String> tokens = new ArrayList<>(Arrays.asList(splitLine));
                 input.add(lineNumber++, tokens);
                 if (splitLine[splitLine.length - 1].equals("hlt")) {
