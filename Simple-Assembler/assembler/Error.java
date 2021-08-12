@@ -4,11 +4,12 @@ import java.util.ArrayList;
 
 public class Error {
     
-    public static void init(ArrayList<ArrayList<String>> input) throws IllegalStateException {
+    public static void init(ArrayList<ArrayList<String>> input) throws Exception {
         imm_contain_alphabets(input);
         imm_outside_range(input);
         error_in_hlt(input);
         invalid_var_or_label_name(input);
+        isReservedWord(input);
     }
 
     private static void error_in_hlt(ArrayList<ArrayList<String>> input) throws IllegalStateException {
@@ -88,5 +89,36 @@ public class Error {
             }
             lineNumber++;
         }
+    }
+
+    private static void isReservedWord(ArrayList<ArrayList<String>> input) throws Exception {
+        int lineNumber = 1;
+        for(ArrayList<String> line : input) {
+            String token = line.get(0);
+            if(UtilityFunctions.isLabel(token)) {
+                token = token.substring(0, token.length()-1);
+                if(InstructionTable.isPresent(token) || token.equals("hlt") || token.equals("var")) {
+                    throw new IllegalStateException("Error at line " + lineNumber + " - " + toString(line) +
+                            "\nUse of reserved keyword - '" + token + "'");
+                }
+            }
+            else if(UtilityFunctions.isVariableKeyWord(token)) {
+                String var = line.get(1);
+                if(InstructionTable.isPresent(var) || var.equals("hlt") || var.equals("var")) {
+                    throw new IllegalStateException("Error at line " + lineNumber +  " - " + toString(line) +
+                    "\nUse of reserved keyword - '" + var + "'");
+                }
+            }
+            lineNumber++;
+        }
+    }
+
+    private static String toString(ArrayList<String> line) {
+        String res = "'";
+        for(String s : line) {
+            res += s + " ";
+        }
+        res += "'";
+        return res;
     }
 }

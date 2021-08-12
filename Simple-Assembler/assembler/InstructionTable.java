@@ -37,7 +37,7 @@ public class InstructionTable {
         return map.get(key);
     }
 
-    private static boolean isPresent(String key) {
+    public static boolean isPresent(String key) {
         return map.containsKey(key);
     }
 }

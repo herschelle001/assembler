@@ -94,11 +94,15 @@ public class Main {
             for (int i = codeStart; i < input.size(); i++) {
                 ArrayList<String> line = input.get(i);
                 String first = line.get(0);
+                if(isVarKeyWord(first)) {
+                    throw new Exception("All variables should be declared at the top");
+                }
                 if (isLabel(first)) {
                     ArrayList<String> temp = new ArrayList<>(line);
                     temp.remove(0);
                     Encode.generate(temp);
-                } else {
+                }
+                else {
                     Encode.generate(line);
                 }
                 currLine++;
@@ -118,5 +122,9 @@ public class Main {
 
     static boolean isLabel(String token) {
         return UtilityFunctions.isLabel(token);
+    }
+
+    static boolean isVarKeyWord(String token) {
+        return UtilityFunctions.isVariableKeyWord(token);
     }
 }
