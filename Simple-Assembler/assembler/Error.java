@@ -8,6 +8,7 @@ public class Error {
         imm_contain_alphabets(input);
         imm_outside_range(input);
         error_in_hlt(input);
+        invalid_var_or_label_name(input);
     }
 
     private static void error_in_hlt(ArrayList<ArrayList<String>> input) throws IllegalStateException {
@@ -52,6 +53,36 @@ public class Error {
                     int value = Integer.parseInt(token.substring(1));
                     if(value < 0 || value > 255) {
                         throw new IllegalStateException("Error at line " + lineNumber + "\nImmediate value out of range");
+                    }
+                }
+            }
+            lineNumber++;
+        }
+    }
+
+    private static void invalid_var_or_label_name(ArrayList<ArrayList<String>> input) throws IllegalStateException {
+        int lineNumber = 1;
+        for(ArrayList<String> line : input) {
+            for(String token : line) {
+                if(UtilityFunctions.isLabel(token)) {
+                    for(char c : token.toCharArray()) {
+                        if( !((c >= 48 && c <= 58) || (c >= 65 && c <= 90) || (c >= 97 && c <= 122)) ) {
+                            throw new IllegalStateException("Error at line " + lineNumber +
+                            "\nLabel name can only contain alphanumeric characters and underscores - '" + token + "'");
+                        }
+                    }
+                }
+                else if(UtilityFunctions.isVariableKeyWord(token)) {
+                    if(line.size() < 2) {
+                        throw new IllegalStateException("Error at line " + lineNumber +
+                                "\nNo variable name detected");
+                    }
+                    String var = line.get(1);
+                    for(char c : var.toCharArray()) {
+                        if( !((c >= 48 && c <= 58) || (c >= 65 && c <= 90) || (c >= 97 && c <= 122)) ) {
+                            throw new IllegalStateException("Error at line " + lineNumber +
+                            "\nVar name can only contain alphanumeric characters and underscores - '" + var + "'");
+                        }
                     }
                 }
             }

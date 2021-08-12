@@ -35,10 +35,9 @@ public class Encode {
                 typeF();
             }
         }
-        catch (NullPointerException e) {
+        catch (IllegalStateException e) {
             throw e;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new Exception("Wrong syntax of " + first + " instruction");
         }
     }
@@ -72,7 +71,7 @@ public class Encode {
         binary.add(res);
 
         if(reg.equals("FLAGS")) {
-            throw new Exception("Illegal use of FLAGS register");
+            throw new IllegalStateException("Illegal use of FLAGS register");
         }
     }
 
@@ -90,7 +89,7 @@ public class Encode {
         binary.add(res);
 
         if(reg1.equals("FLAGS")) {
-            throw new Exception("Illegal use of FLAGS register");
+            throw new IllegalStateException("Illegal use of FLAGS register");
         }
     }
 

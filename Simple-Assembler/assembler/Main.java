@@ -61,7 +61,10 @@ public class Main {
                     }
                     currLine++;
                 }
-            } catch (Exception e) {
+            } catch (IllegalStateException e) {
+                throw e;
+            }
+            catch (Exception e) {
                 throw new Exception("Wrong syntax");
             }
 
