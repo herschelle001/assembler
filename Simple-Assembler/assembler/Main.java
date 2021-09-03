@@ -61,7 +61,7 @@ public class Main {
                     }
                     currLine++;
                 }
-            } catch (IllegalStateException e) {
+            } catch (IllegalStateException | NullPointerException e) {
                 throw e;
             }
             catch (Exception e) {
@@ -100,10 +100,10 @@ public class Main {
                 if (isLabel(first)) {
                     ArrayList<String> temp = new ArrayList<>(line);
                     temp.remove(0);
-                    Encode.generate(temp);
+                    Encode.generate(temp, currLine + numberOfVariables);
                 }
                 else {
-                    Encode.generate(line);
+                    Encode.generate(line, currLine + numberOfVariables);
                 }
                 currLine++;
             }
@@ -120,11 +120,11 @@ public class Main {
         }
     }
 
-    static boolean isLabel(String token) {
+    private static boolean isLabel(String token) {
         return UtilityFunctions.isLabel(token);
     }
 
-    static boolean isVarKeyWord(String token) {
+    private static boolean isVarKeyWord(String token) {
         return UtilityFunctions.isVariableKeyWord(token);
     }
 }

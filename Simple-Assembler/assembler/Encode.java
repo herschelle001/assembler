@@ -5,14 +5,16 @@ import java.util.ArrayList;
 public class Encode {
 
     private static final ArrayList<String> binary = new ArrayList<>();
-
+    private static int lineNumber;
+    
     public static void printBinary() {
         for(String s : binary) {
             System.out.println(s);
         }
     }
 
-    public static void generate(ArrayList<String> line) throws Exception {
+    public static void generate(ArrayList<String> line, int lineNumber) throws Exception {
+        Encode.lineNumber = lineNumber;
         String first = line.get(0);
         char type = UtilityFunctions.getType(first);
         try {
@@ -35,7 +37,7 @@ public class Encode {
                 typeF();
             }
         }
-        catch (IllegalStateException e) {
+        catch (IllegalStateException | NullPointerException e) {
             throw e;
         } catch (Exception e) {
             throw new Exception("Wrong syntax of " + first + " instruction");
@@ -71,7 +73,13 @@ public class Encode {
         binary.add(res);
 
         if(reg.equals("FLAGS")) {
-            throw new IllegalStateException("Illegal use of FLAGS register");
+            throw new IllegalStateException("Error at line " + lineNumber +
+                    " - " + toString(line) + "\nIllegal use of FLAGS register");
+        }
+
+        if(immInBin == null) {
+            throw new IllegalStateException("Error at line " + lineNumber +
+                    " - " + toString(line) + "\nImmediate should be preceded by $ symbol");
         }
     }
 
@@ -89,7 +97,8 @@ public class Encode {
         binary.add(res);
 
         if(reg1.equals("FLAGS")) {
-            throw new IllegalStateException("Illegal use of FLAGS register");
+            throw new IllegalStateException("Error at line " + lineNumber + " - " + toString(line) +
+                    "\nIllegal use of FLAGS register");
         }
     }
 
@@ -120,5 +129,14 @@ public class Encode {
 
     private static void typeF() {
         binary.add("1001100000000000");
+    }
+
+    private static String toString(ArrayList<String> line) {
+        String res = "'";
+        for(String s : line) {
+            res += s + " ";
+        }
+        res += "'";
+        return res;
     }
 }

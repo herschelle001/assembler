@@ -2,7 +2,7 @@ package simulator;
 
 public class Register {
    private int data;
-   private static final int MAX = (int) Math.pow(2, 16);
+   public static final int MAX = (int) Math.pow(2, 16);
 
    public Register() {
       data = 0;
@@ -13,7 +13,7 @@ public class Register {
    }
 
    public boolean setData(int value) {
-      if(value > MAX) {
+      if(value >= MAX) {
          data = value % MAX;
          return true;
       }

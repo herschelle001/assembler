@@ -1,14 +1,17 @@
 package assembler;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class VariableTable {
 
-    private static final Map<String, String> map = new HashMap<>();
+    private static final Map<String, String> map = new LinkedHashMap<>();
 
-    public static void addVariable(String label, String address) {
-        map.put(label, address);
+    public static void addVariable(String var, String address) {
+        if(isPresent(var)) {
+            throw new IllegalStateException("Variable already declared - '" + var + "'");
+        }
+        map.put(var, address);
     }
 
     public static String getAddress(String variable) {

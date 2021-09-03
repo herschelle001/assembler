@@ -35,6 +35,7 @@ public class Execute {
                 updatedPC = typeE(binary);
             }
             else {
+                FLAGS.clear();
                 halted = true;
             }
             PC_Dump();
@@ -156,11 +157,11 @@ public class Execute {
             reg.setData(immediate);
         }
         else if(name.equals("ls")) {
-            int v = reg.getData() >> immediate;
+            int v = reg.getData() << immediate;
             reg.setData(v);
         }
         else if(name.equals("rs")) {
-            int v = reg.getData() << immediate;
+            int v = reg.getData() >> immediate;
             reg.setData(v);
         }
         FLAGS.clear();
@@ -184,11 +185,13 @@ public class Execute {
             reg1.setData(val2);
         }
         else if(name.equals("not")) {
-            reg1.setData(~val2);
+            reg1.setData(Register.MAX - 1 - val2);
         }
         else if(name.equals("div")) {
             int val = val1 / val2;
-            reg1.setData(val);
+            int rem = val1 % val2;
+            R0.setData(val);
+            R1.setData(rem);
         }
         else if(name.equals("cmp")) {
             if(val1 == val2) {
@@ -258,6 +261,4 @@ public class Execute {
         FLAGS.clear();
         return res;
     }
-
-
 }

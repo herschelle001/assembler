@@ -2,7 +2,7 @@ package assembler;
 
 public class UtilityFunctions {
 
-    static String getVariableAddress(String variable) {
+    public static String getVariableAddress(String variable) {
         int value = Integer.parseInt(VariableTable.getAddress(variable));
         String res = Integer.toBinaryString(value);
         int l = res.length();
@@ -12,7 +12,7 @@ public class UtilityFunctions {
         return res;
     }
 
-    static String getLabelAddress(String label) {
+    public static String getLabelAddress(String label) {
         int value = Integer.parseInt(LabelTable.getAddress(label));
         String res = Integer.toBinaryString(value);
         int l = res.length();
@@ -22,7 +22,10 @@ public class UtilityFunctions {
         return res;
     }
 
-    static String immediateToBinary(String immediate) {
+    public static String immediateToBinary(String immediate) {
+        if(!isImmediate(immediate)) {
+            return null;
+        }
         int value = Integer.parseInt(immediate.substring(1));
         String res = Integer.toBinaryString(value);
         int l = res.length();
@@ -32,7 +35,7 @@ public class UtilityFunctions {
         return res;
     }
 
-    static String getRegisterCode(String register) {
+    public static String getRegisterCode(String register) {
         if(register.equals("FLAGS")) {
             return "111";
         }
@@ -45,35 +48,35 @@ public class UtilityFunctions {
         return res;
     }
 
-    static String getOpcode(String instruction) throws Exception {
+    public static String getOpcode(String instruction) throws Exception {
         return InstructionTable.getInstruction(instruction).getOpcode();
     }
 
-    static char getType(String instruction) throws Exception {
+    public static char getType(String instruction) throws Exception {
         return InstructionTable.getInstruction(instruction).getType();
     }
 
-    static boolean isRegister(String token) {
+    public static boolean isRegister(String token) {
         return token.charAt(0) == 'R' || token.equals("FLAGS");
     }
 
-    static boolean isVariableKeyWord(String token) {
+    public static boolean isVariableKeyWord(String token) {
         return token.equals("var");
     }
 
-    static boolean isLabel(String token) {
+    public static boolean isLabel(String token) {
         return token.charAt(token.length()-1) == ':';
     }
 
-    static boolean isAddress(String token) {
+    public static boolean isAddress(String token) {
         return LabelTable.isPresent(token);
     }
 
-    static boolean isImmediate(String token) {
+    public static boolean isImmediate(String token) {
         return token.charAt(0) == '$';
     }
 
-    static boolean isVariable(String token) {
+    public static boolean isVariable(String token) {
         return VariableTable.isPresent(token);
     }
 }

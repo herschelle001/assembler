@@ -38,7 +38,8 @@ public class Error {
                         Integer.parseInt(token.substring(1));
                     } 
                     catch (IllegalStateException e) {
-                        throw new IllegalStateException("Error at line " + lineNumber + "\nImmediate should contain only integers");
+                        throw new IllegalStateException("Error at line " + lineNumber + 
+                                " - " + toString(line) + "\nImmediate should contain only integers");
                     }
                 }
             }
@@ -53,7 +54,8 @@ public class Error {
                 if(UtilityFunctions.isImmediate(token)) {
                     int value = Integer.parseInt(token.substring(1));
                     if(value < 0 || value > 255) {
-                        throw new IllegalStateException("Error at line " + lineNumber + "\nImmediate value out of range");
+                        throw new IllegalStateException("Error at line " + lineNumber + 
+                                " - " + toString(line) + "\nImmediate value out of range");
                     }
                 }
             }
@@ -67,21 +69,21 @@ public class Error {
             for(String token : line) {
                 if(UtilityFunctions.isLabel(token)) {
                     for(char c : token.toCharArray()) {
-                        if( !((c >= 48 && c <= 58) || (c >= 65 && c <= 90) || (c >= 97 && c <= 122)) ) {
-                            throw new IllegalStateException("Error at line " + lineNumber +
+                        if( !((c >= 48 && c <= 58) || (c >= 65 && c <= 90) || (c >= 97 && c <= 122) || (c == 95)) ) {
+                            throw new IllegalStateException("Error at line " + lineNumber + " - " + toString(line) +
                             "\nLabel name can only contain alphanumeric characters and underscores - '" + token + "'");
                         }
                     }
                 }
                 else if(UtilityFunctions.isVariableKeyWord(token)) {
                     if(line.size() < 2) {
-                        throw new IllegalStateException("Error at line " + lineNumber +
+                        throw new IllegalStateException("Error at line " + lineNumber + " - " + toString(line) +
                                 "\nNo variable name detected");
                     }
                     String var = line.get(1);
                     for(char c : var.toCharArray()) {
-                        if( !((c >= 48 && c <= 58) || (c >= 65 && c <= 90) || (c >= 97 && c <= 122)) ) {
-                            throw new IllegalStateException("Error at line " + lineNumber +
+                        if( !((c >= 48 && c <= 58) || (c >= 65 && c <= 90) || (c >= 97 && c <= 122) || (c == 95)) ) {
+                            throw new IllegalStateException("Error at line " + lineNumber + " - " + toString(line) +
                             "\nVar name can only contain alphanumeric characters and underscores - '" + var + "'");
                         }
                     }
